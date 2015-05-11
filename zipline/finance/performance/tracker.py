@@ -87,6 +87,7 @@ class PerformanceTracker(object):
     def __init__(self, sim_params, env=None):
 
         self.sim_params = sim_params
+        self._env = env
 
         self.period_start = self.sim_params.period_start
         self.period_end = self.sim_params.period_end
@@ -101,7 +102,7 @@ class PerformanceTracker(object):
         self.capital_base = self.sim_params.capital_base
         self.emission_rate = sim_params.emission_rate
 
-        all_trading_days = env.trading_days
+        all_trading_days = self._env.trading_days
         mask = ((all_trading_days >= normalize_date(self.period_start)) &
                 (all_trading_days <= normalize_date(self.period_end)))
 
@@ -210,13 +211,12 @@ class PerformanceTracker(object):
             self.saved_dt = date
             self.todays_performance.period_close = self.saved_dt
 
-    @with_environment()
-    def _update_asset(self, sid, env=None):
+    def _update_asset(self, sid):
         if sid in self._known_asset_sids:
             return
         self._known_asset_sids.add(sid)
         # Collect the end date of the asset
-        asset = env.asset_finder.retrieve_asset(sid)
+        asset = self._env.asset_finder.retrieve_asset(sid)
         if asset.end_date:
             try:
                 date_sids = self._asset_ends[asset.end_date]
@@ -360,23 +360,6 @@ class PerformanceTracker(object):
 
         self.all_benchmark_returns[midnight] = event.returns
 
-    def _next_trading_day(self, midnight_of_date_that_just_ended):
-        """
-        Calculates the next trading day that is in the defined trading days of
-        the simulation. Returns None if the result would be beyond the
-        simulation bounds.
-        """
-        next_trading_day_idx = self.trading_days.get_loc(
-            midnight_of_date_that_just_ended,
-        ) + 1
-
-        if next_trading_day_idx < len(self.trading_days):
-            return self.trading_days[next_trading_day_idx]
-        else:
-            # Bail if the next trading day is outside our trading range, since
-            # we won't simulate the next day.
-            return None
-
     def check_upcoming_dividends(self, next_trading_day):
         """
         Check if we currently own any stocks with dividends whose ex_date is
@@ -457,7 +440,7 @@ class PerformanceTracker(object):
         # if this is the close, save the returns objects for cumulative risk
         # calculations and update dividends for the next day.
         if dt == self.market_close:
-            next_trading_day = self._next_trading_day(todays_date)
+            next_trading_day = self._env.next_trading_day(todays_date)
             if next_trading_day:
                 self.check_upcoming_dividends(next_trading_day)
                 self.check_upcoming_asset_ends(next_trading_day)
@@ -512,7 +495,7 @@ class PerformanceTracker(object):
         self.todays_performance.period_open = self.market_open
         self.todays_performance.period_close = self.market_close
 
-        next_trading_day = self._next_trading_day(completed_date)
+        next_trading_day = self._env.next_trading_day(completed_date)
         if next_trading_day:
             self.check_upcoming_dividends(next_trading_day)
             self.check_upcoming_asset_ends(next_trading_day)
