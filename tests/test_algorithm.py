@@ -55,6 +55,7 @@ from zipline.test_algorithms import (
     TestTargetPercentAlgorithm,
     TestTargetValueAlgorithm,
     SetLongOnlyAlgorithm,
+    SetAssetDateBoundsAlgorithm,
     SetMaxPositionSizeAlgorithm,
     SetMaxOrderCountAlgorithm,
     SetMaxOrderSizeAlgorithm,
@@ -1210,16 +1211,16 @@ class TestTradingControls(TestCase):
         df_source, _ = factory.create_test_df_source(self.sim_params)
         metadata = {0: {'start_date': '1990-01-01',
                         'end_date': '2020-01-01'}}
-        algo = TestOrderAlgorithm(asset_metadata=metadata,
-                                  sim_params=self.sim_params)
+        algo = SetAssetDateBoundsAlgorithm(asset_metadata=metadata,
+                                           sim_params=self.sim_params,)
         algo.run(df_source)
 
         # Run the algorithm with a sid that has already ended
         df_source, _ = factory.create_test_df_source(self.sim_params)
         metadata = {0: {'start_date': '1989-01-01',
                         'end_date': '1990-01-01'}}
-        algo = TestOrderAlgorithm(asset_metadata=metadata,
-                                  sim_params=self.sim_params)
+        algo = SetAssetDateBoundsAlgorithm(asset_metadata=metadata,
+                                           sim_params=self.sim_params,)
         with self.assertRaises(TradingControlViolation):
             algo.run(df_source)
 
@@ -1227,8 +1228,8 @@ class TestTradingControls(TestCase):
         df_source, _ = factory.create_test_df_source(self.sim_params)
         metadata = {0: {'start_date': '2020-01-01',
                         'end_date': '2021-01-01'}}
-        algo = TestOrderAlgorithm(asset_metadata=metadata,
-                                  sim_params=self.sim_params)
+        algo = SetAssetDateBoundsAlgorithm(asset_metadata=metadata,
+                                           sim_params=self.sim_params,)
         with self.assertRaises(TradingControlViolation):
             algo.run(df_source)
 

@@ -95,6 +95,7 @@ from zipline.finance.execution import (
     StopLimitOrder,
     StopOrder,
 )
+from zipline.finance.controls import AssetDateBounds
 from zipline.transforms import BatchTransform, batch_transform
 
 
@@ -484,6 +485,18 @@ class SetLongOnlyAlgorithm(TradingAlgorithm):
     def initialize(self):
         self.order_count = 0
         self.set_long_only()
+
+
+class SetAssetDateBoundsAlgorithm(TradingAlgorithm):
+    """
+    Algorithm that tries to order 1 share of sid 0 on every bar and has an
+    AssetDateBounds() trading control in place.
+    """
+    def initialize(self):
+        self.register_trading_control(AssetDateBounds())
+
+    def handle_data(algo, data):
+        algo.order(algo.sid(0), 1)
 
 
 class TestRegisterTransformAlgorithm(TradingAlgorithm):

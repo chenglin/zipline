@@ -282,9 +282,6 @@ class TradingAlgorithm(object):
 
         self.initialized = False
 
-        # Register any default TradingControl objects
-        self.register_trading_control(AssetDateBounds())
-
         # Subclasses that override initialize should only worry about
         # setting self.initialized = True if AUTO_INITIALIZE is
         # is manually set to False.
