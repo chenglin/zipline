@@ -165,8 +165,8 @@ class TradingEnvironment(object):
         asset_finder will be erased before new metadata is provided.
         If asset_finder is provided, the existing asset_finder will be replaced
         outright with the new asset_finder.
-        If asset_metadata is provided, the existing metadata will be cleared and
-        replaced with the provided metadata.
+        If asset_metadata is provided, the existing metadata will be cleared
+        and replaced with the provided metadata.
         All identifiers will be inserted in the asset metadata if they are not
         already present.
 

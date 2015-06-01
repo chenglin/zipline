@@ -521,8 +521,7 @@ class AssetFinderTestCase(TestCase):
                                start_date='2014-01-01',
                                end_date='2015-01-01',
                                symbol="PLAY",
-                               foo_data="FOO",
-        )
+                               foo_data="FOO",)
 
         # Test proper insertion
         self.assertEqual('equity', finder.metadata_cache[0]['asset_type'])
@@ -538,8 +537,7 @@ class AssetFinderTestCase(TestCase):
                                start_date='2014-01-01',
                                end_date='2015-02-01',
                                symbol="PLAY",
-                               exchange="NYSE",
-        )
+                               exchange="NYSE",)
         self.assertEqual('2015-02-01', finder.metadata_cache[0]['end_date'])
         self.assertEqual('NYSE', finder.metadata_cache[0]['exchange'])
 

@@ -52,7 +52,6 @@ from zipline.finance.controls import (
     MaxPositionSize,
     MaxLeverage,
     RestrictedListOrder,
-    AssetDateBounds
 )
 from zipline.finance.execution import (
     LimitOrder,

@@ -53,10 +53,10 @@ ASSET_FIELDS = [
     'expiration_date',
     'contract_multiplier',
     # The following fields are for compatibility with other systems
-    'file_name', # Used as symbol
-    'company_name', # Used as asset_name
-    'start_date_nano', # Used as start_date
-    'end_date_nano', # Used as end_date
+    'file_name',  # Used as symbol
+    'company_name',  # Used as asset_name
+    'start_date_nano',  # Used as start_date
+    'end_date_nano',  # Used as end_date
 ]
 
 
