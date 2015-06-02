@@ -2066,31 +2066,6 @@ class TestPositionTracker(unittest.TestCase):
         self.assertEqual(100 - 200 + 300000 - 400000, pt._net_exposure())
 
     @with_environment()
-    def test_maybe_create_end_sid_transaction(self, env=None):
-        metadata = {1: {'asset_type': 'equity'},
-                    2: {'asset_type': 'future',
-                        'contract_multiplier': 1000}}
-        env.update_asset_finder(asset_metadata=metadata)
-        pt = perf.PositionTracker()
-        dt = pd.Timestamp("1984/03/06 3:00PM")
-        pos1 = perf.Position(1, amount=np.float64(120.0),
-                             last_sale_date=dt, last_sale_price=3.4)
-        pos2 = perf.Position(2, amount=np.float64(-100.0),
-                             last_sale_date=dt, last_sale_price=3.4)
-        pt.update_positions({1: pos1, 2: pos2})
-
-        # Test owned long
-        txn = pt._maybe_create_end_sid_transaction(1, dt)
-        self.assertEqual(-120, txn.amount)
-
-        # Test owned short
-        txn = pt._maybe_create_end_sid_transaction(2, dt)
-        self.assertEqual(100, txn.amount)
-
-        # Test not-owned SID
-        self.assertIsNone(pt._maybe_create_end_sid_transaction(3, dt))
-
-    @with_environment()
     def test_serialization(self, env=None):
         metadata = {1: {'asset_type': 'equity'},
                     2: {'asset_type': 'future',

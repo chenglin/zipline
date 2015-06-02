@@ -20,7 +20,6 @@ from zipline.assets import (
     Equity, Future
 )
 from zipline.finance.trading import with_environment
-from zipline.finance.slippage import Transaction
 from . position import positiondict
 
 log = logbook.Logger('Performance')
@@ -306,19 +305,6 @@ class PositionTracker(object):
         # the stock for any dividends paid while borrowing.
         net_cash_payment = payments['cash_amount'].fillna(0).sum()
         return net_cash_payment
-
-    def _maybe_create_end_sid_transaction(self, sid, dt):
-        if not self._position_amounts.get(sid):
-            return None
-        txn = Transaction(
-            sid=sid,
-            amount=(-1 * self._position_amounts[sid]),
-            dt=dt,
-            price=self._position_last_sale_prices[sid],
-            commission=0,
-            order_id=0
-        )
-        return txn
 
     def get_positions(self):
 
