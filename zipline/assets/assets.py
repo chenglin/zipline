@@ -22,7 +22,7 @@ import operator
 from logbook import Logger
 import pandas as pd
 from pandas.tseries.tools import normalize_date
-from six import with_metaclass
+from six import with_metaclass, string_types
 
 from zipline.errors import (
     SymbolNotFound,
@@ -92,7 +92,7 @@ class AssetFinder(object):
     def _assign_sid(self, identifier):
         if hasattr(identifier, '__int__'):
             return identifier.__int__()
-        if isinstance(identifier, str):
+        if isinstance(identifier, string_types):
             return self._next_free_sid()
 
     def retrieve_asset(self, sid, default_none=False):
@@ -278,7 +278,7 @@ class AssetFinder(object):
             kwargs['symbol']
             pass
         except KeyError:
-            if isinstance(identifier, str):
+            if isinstance(identifier, string_types):
                 kwargs['symbol'] = identifier
 
         # If the company_name is in the kwargs, it may be the asset_name
@@ -376,7 +376,7 @@ class AssetFinder(object):
                     raise SymbolNotFound(symbol=asset_convertible)
                 matches.append(result)
 
-            elif isinstance(asset_convertible, str):
+            elif isinstance(asset_convertible, string_types):
                 # Throws SymbolNotFound on failure to match.
                 matches.append(
                     self.lookup_symbol_resolve_multiple(
@@ -528,12 +528,15 @@ class AssetConvertible(with_metaclass(ABCMeta)):
     ABC for types that are convertible to integer-representations of
     Assets.
 
-    Includes Asset, str, and Integral
+    Includes Asset, six.string_types, and Integral
     """
     pass
+
 AssetConvertible.register(Integral)
-AssetConvertible.register(str)
 AssetConvertible.register(Asset)
+# Use six.string_types for Python2/3 compatibility
+for type in string_types:
+    AssetConvertible.register(type)
 
 
 class NotAssetConvertible(ValueError):
