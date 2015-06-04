@@ -311,23 +311,23 @@ class AssetFinder(object):
 
         # Process dates
         try:
-            kwargs['start_date'] = self.trading_calendar.\
-                canonicalize_datetime(pd.Timestamp(kwargs['start_date']))
+            kwargs['start_date'] = pd.Timestamp(self.trading_calendar.\
+                canonicalize_datetime(pd.Timestamp(kwargs['start_date'])))
         except KeyError:
             pass
         try:
-            kwargs['end_date'] = self.trading_calendar.\
-                canonicalize_datetime(pd.Timestamp(kwargs['end_date']))
+            kwargs['end_date'] = pd.Timestamp(self.trading_calendar.\
+                canonicalize_datetime(pd.Timestamp(kwargs['end_date'])))
         except KeyError:
             pass
         try:
-            kwargs['notice_date'] = self.trading_calendar.\
-                canonicalize_datetime(pd.Timestamp(kwargs['notice_date']))
+            kwargs['notice_date'] = pd.Timestamp(self.trading_calendar.\
+                canonicalize_datetime(pd.Timestamp(kwargs['notice_date'])))
         except KeyError:
             pass
         try:
-            kwargs['expiration_date'] = self.trading_calendar.\
-                canonicalize_datetime(pd.Timestamp(kwargs['expiration_date']))
+            kwargs['expiration_date'] = pd.Timestamp(self.trading_calendar.\
+                canonicalize_datetime(pd.Timestamp(kwargs['expiration_date'])))
         except KeyError:
             pass
 
